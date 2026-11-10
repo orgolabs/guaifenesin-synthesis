@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Williamson Ether Synthesis — Guaifenesin from Guaiacol</title>
+  <meta name="description" content="An interactive, fact-checked walkthrough of the Williamson ether synthesis of guaifenesin from guaiacol and 3-chloro-1,2-propanediol: real 3D structures, the phenoxide SN2 mechanism, the microscale procedure, and a live yield calculator." />
+  <link rel="icon" href="https://orgolabs.github.io/shared/brand/orgolabs-icon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+  <link rel="stylesheet" href="https://orgolabs.github.io/shared/styles.css" />
+</head>
+<body>
+  <noscript><p style="padding:24px">This interactive lab needs JavaScript. Source: <a href="https://github.com/orgolabs/guaifenesin-synthesis">github.com/orgolabs/guaifenesin-synthesis</a></p></noscript>
+
+  <!-- Structured data only. ALL prose lives in content.md. The shared engine renders everything. -->
+  <script>
+    window.LAB = {
+      repo: "guaifenesin-synthesis",
+      labName: "Guaifenesin Synthesis",
+      eyebrow: "Interactive organic chemistry · Williamson ether synthesis & SN2",
+      title: "Williamson Ether Synthesis: Guaifenesin from Guaiacol",
+      lede: "Guaifenesin — the expectorant in <strong>Mucinex</strong> and <strong>Robitussin</strong> — is built in one key step. <strong>Sodium hydroxide</strong> deprotonates the phenol <strong>guaiacol</strong> to its phenoxide, which then does an <strong>S<sub>N</sub>2</strong> on <strong>3-chloro-1,2-propanediol</strong>, displacing chloride to forge a new aryl–ether bond. Rotate the real molecules, follow the mechanism, and scale the microscale experiment below.",
+      reaction: "\\ce{C7H8O2 + C3H7ClO2 ->[NaOH] C10H14O4 + NaCl + H2O}",
+      content: "content.md",
+      viewers: [
+        { id: "view-guaiacol", key: "guaiacol", kind: "start", role: "Phenol / nucleophile precursor", name: "Guaiacol",
+          iupac: "2-methoxyphenol", note: "A phenol. NaOH removes its O–H proton to give a resonance-stabilized <strong>phenoxide</strong> — the nucleophile for the ether-forming step." },
+        { id: "view-chloropropanediol", key: "chloropropanediol", kind: "start", role: "Alkyl halide", name: "3-Chloro-1,2-propanediol",
+          iupac: "3-chloropropane-1,2-diol", note: "The electrophile (a.k.a. &alpha;-chlorohydrin). Its less-hindered <strong>primary C–Cl</strong> carbon is the SN2 site; the 1,2-diol is left untouched. <strong>Highly toxic.</strong>" },
+        { id: "view-guaifenesin", key: "guaifenesin", kind: "major", role: "Product", name: "Guaifenesin",
+          iupac: "3-(2-methoxyphenoxy)propane-1,2-diol", note: "The aryl <strong>ether</strong> product, an expectorant. The phenol oxygen is now bonded to the propanediol chain." }
+      ],
+      pathway: [
+        { node: { img: "guaiacol.png", name: "Guaiacol", sub: "$\\ce{C7H8O2}$ · phenol" } },
+        { plus: true },
+        { node: { img: "chloropropanediol.png", name: "3-Chloro-1,2-propanediol", sub: "$\\ce{C3H7ClO2}$ · alkyl halide" } },
+        { op: { cond: "\\ce{NaOH}", sub: "EtOH · reflux" } },
+        { node: { img: "guaifenesin.png", name: "Guaifenesin", sub: "$\\ce{C10H14O4}$", kind: "major" } }
+      ],
+      pathwayCaption: "NaOH deprotonates guaiacol to its phenoxide, which displaces chloride from the primary carbon of 3-chloro-1,2-propanediol in an SN2 — forging the new aryl–ether bond of guaifenesin (+ NaCl).",
+      calculator: {
+        intro: "Pre-filled with the microscale amount from the handout: <strong>0.55 mL guaiacol</strong> is the limiting reagent (the chlorodiol is added in excess as a 50% solution). Molar masses: guaiacol 124.14, guaifenesin 198.22 g/mol; guaiacol density &asymp;1.129 g/mL. Guaifenesin forms 1 : 1 from the limiting guaiacol.",
+        inputs: [
+          { id: "in-gua", label: "Guaiacol volume (mL)", value: "0.55", step: "0.05", note: "density ≈1.129 g/mL" },
+          { id: "in-isolated", label: "Isolated guaifenesin mass (g)", value: "0.6", step: "0.05", optional: true }
+        ],
+        outputs: [
+          { id: "o-guammol", label: "Guaiacol", unit: "mmol" },
+          { id: "o-theory", label: "Theoretical guaifenesin", unit: "g", kind: "major" },
+          { id: "o-yield", label: "Percent yield", unit: "%", kind: "yield" }
+        ],
+        compute: function (v) {
+          var G = 124.14, P = 198.22, d = 1.129;
+          if (!(v["in-gua"] > 0)) return {};
+          var n = v["in-gua"] * d / G * 1000, theory = n / 1000 * P;
+          var o = {
+            "o-guammol": n.toFixed(2),
+            "o-theory": theory.toFixed(3)
+          };
+          o["o-yield"] = v["in-isolated"] > 0 ? (v["in-isolated"] / theory * 100).toFixed(1) : "";
+          return o;
+        }
+      },
+      references: [
+        { authors: "Course handout.", title: "Williamson Ether Synthesis: Guaifenesin from Guaiacol (microscale)", meta: "Adapted laboratory procedure.", note: "The source experiment: the microscale phenoxide SN2 that builds the aryl ether of guaifenesin. The handout is bundled here.", url: "docs/guaifenesin-lab-manual.pdf", linkText: "Download the lab handout (PDF)", access: "open" },
+        { authors: "Williamson, A. W.", title: "Theory of Ætherification", meta: "Philos. Mag. 1850, 37 (251), 350–356.", note: "The original description of the alkoxide + alkyl-halide ether synthesis that now bears Williamson's name.", url: "https://doi.org/10.1080/14786445008646627", linkText: "doi.org/10.1080/14786445008646627", access: "paywall" },
+        { authors: "PubChem, U.S. National Library of Medicine.", title: "Guaiacol (460), 3-Chloro-1,2-propanediol (7290), Guaifenesin (3516)", meta: "Public-domain compound records and computed 3D conformers.", note: "Free and public. The 3D coordinates come directly from these records.", url: "https://pubchem.ncbi.nlm.nih.gov/compound/3516", linkText: "pubchem.ncbi.nlm.nih.gov/compound/3516", access: "open" },
+        { authors: "Rego, N.; Koes, D.", title: "3Dmol.js: molecular visualization with WebGL", meta: "Bioinformatics 2015, 31 (8), 1322–1324.", note: "The open-source (BSD-3) library rendering the interactive structures.", url: "https://doi.org/10.1093/bioinformatics/btu829", linkText: "doi.org/10.1093/bioinformatics/btu829", access: "open" }
+      ]
+    };
+  </script>
+  <script src="js/structures.js"></script>
+  <script src="https://orgolabs.github.io/shared/lab.js"></script>
+</body>
+</html>
